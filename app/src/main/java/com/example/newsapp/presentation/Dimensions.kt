@@ -16,5 +16,7 @@ object Dimensions {
 
     val SmallIconSize = 11.dp
 
+    val IconSize = 20.dp
+
 
 }
