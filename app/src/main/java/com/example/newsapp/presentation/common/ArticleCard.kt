@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -33,18 +34,24 @@ import com.example.newsapp.presentation.Dimensions.PaddingXS
 import com.example.newsapp.presentation.Dimensions.PaddingXXS
 import com.example.newsapp.presentation.Dimensions.SmallIconSize
 import com.example.newsapp.ui.theme.NewsAppTheme
+import org.ocpsoft.prettytime.PrettyTime
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.TimeZone
+
 
 @Composable
 fun ArticleCard(
     article: Article,
     onClick: () -> Unit,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     Row(modifier = modifier.clickable { onClick() }) {
         AsyncImage(
             model = ImageRequest.Builder(context).data(article.urlToImage).build(),
             contentDescription = null,
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(ArticleCardSize)
                 .clip(MaterialTheme.shapes.medium)
@@ -79,8 +86,12 @@ fun ArticleCard(
                     tint = colorResource(id = R.color.body)
                 )
                 Spacer(modifier = Modifier.width(PaddingXS))
+                val prettyTime = PrettyTime()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+                val date: Date? = dateFormat.parse(article.publishedAt)
                 Text(
-                    text = article.publishedAt,
+                    text = prettyTime.format(date),
                     style = MaterialTheme.typography.labelMedium
                         .copy(fontWeight = FontWeight.Bold),
                     color = colorResource(id = R.color.body)
