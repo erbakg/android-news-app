@@ -18,5 +18,7 @@ object Dimensions {
 
     val IconSize = 20.dp
 
+    val ArticleImageHeight = 248.dp
+
 
 }
