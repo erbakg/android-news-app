@@ -17,22 +17,41 @@ import com.example.newsapp.presentation.Dimensions.PaddingXXS
 
 @Composable
 fun ArticlesList(
+    articles: List<Article>,
+    onClick: (Article) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(PaddingL),
+        contentPadding = PaddingValues(all = PaddingXXS)
+    ) {
+
+        items(count = articles.size) {
+            val article = articles[it]
+            ArticleCard(article = article, onClick = { onClick(article) })
+        }
+    }
+}
+
+@Composable
+fun ArticlesList(
     articles: LazyPagingItems<Article>,
     onClick: (Article) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val handlePagingResult = handlePagingResult(articles = articles)
-    if(handlePagingResult){
+    if (handlePagingResult) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(PaddingL),
             contentPadding = PaddingValues(all = PaddingXXS)
-            ) {
+        ) {
 
-            items(count = articles.itemCount){
-                articles[it]?.let{
-                    ArticleCard(article = it, onClick = { onClick(it)})
+            items(count = articles.itemCount) {
+                articles[it]?.let {
+                    ArticleCard(article = it, onClick = { onClick(it) })
                 }
 
             }
