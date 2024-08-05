@@ -34,9 +34,7 @@ import com.example.newsapp.ui.theme.NewsAppTheme
 
 @Composable
 fun DetailsScreen(
-    article: Article,
-    event: (DetailsEvent) -> Unit,
-    navigateUp: () -> Unit
+    article: Article, event: (DetailsEvent) -> Unit, navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -63,7 +61,7 @@ fun DetailsScreen(
                     }
                 }
             },
-            onBookmarkClick = { event(DetailsEvent.SaveArticle) },
+            onBookmarkClick = { event(DetailsEvent.UpsertDeleteArticle(article)) },
             onBackClick = navigateUp
         )
         LazyColumn(
@@ -117,8 +115,7 @@ private fun DetailsScreenPreview() {
                 description = "Der Bitcoin ist in den vergangenen Wochen auffällig stark gefallen. Ein Grund sind offensichtlich beschlagnahmte Kryptowährungs-Bestände, die der Freistaat Sachsen verkauft hat. Es gibt weitere Ursachen. Von Antje Erhard.",
                 publishedAt = "2024-07-11T06:15:49Z",
                 source = Source(
-                    id = "",
-                    name = "tagesschau.de"
+                    id = "", name = "tagesschau.de"
                 ),
                 title = "Was Sachsen mit dem Bitcoin-Kursrutsch zu tun hat",
                 url = "https://www.tagesschau.de/wirtschaft/boerse/bitcoin-kursverluste-sachsen-verkaeufe-japan-100.html",

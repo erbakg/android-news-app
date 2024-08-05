@@ -31,7 +31,11 @@ import com.example.newsapp.presentation.navgraph.Route
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
+fun HomeScreen(
+    articles: LazyPagingItems<Article>,
+    navigateToSearch: ()-> Unit,
+    navigateToDetails: (Article) -> Unit
+) {
     val titles by remember {
         derivedStateOf {
             if (articles.itemCount > 10) {
@@ -67,7 +71,9 @@ fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
             onValueChange = {},
             onSearch = { /*TODO*/ },
             modifier = Modifier.padding(horizontal = PaddingL),
-            onClick = {}
+            onClick = {
+                navigateToSearch()
+            }
 
         )
         Spacer(modifier = Modifier.height(PaddingL))
@@ -86,7 +92,7 @@ fun HomeScreen(articles: LazyPagingItems<Article>, navigate: (String) -> Unit) {
         ArticlesList(
             articles = articles,
             onClick = {
-                navigate(Route.DetailsScreen.route)
+                navigateToDetails(it)
             },
             modifier = Modifier.padding(horizontal = PaddingL)
         )
