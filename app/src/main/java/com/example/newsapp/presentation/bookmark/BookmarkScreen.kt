@@ -1,6 +1,5 @@
 package com.example.newsapp.presentation.bookmark
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.newsapp.R
+import com.example.newsapp.domain.model.Article
 import com.example.newsapp.presentation.Dimensions.PaddingL
 import com.example.newsapp.presentation.common.ArticlesList
 import com.example.newsapp.presentation.navgraph.Route
@@ -21,7 +21,7 @@ import com.example.newsapp.presentation.navgraph.Route
 @Composable
 fun BookmarkScreen(
     state: BookmarkState,
-    navigate: (String) -> Unit
+    navigateToDetails: (Article) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -42,7 +42,7 @@ fun BookmarkScreen(
         )
         Spacer(modifier = Modifier.height(PaddingL))
 
-        ArticlesList(articles = state.articles, onClick = { navigate(Route.DetailsScreen.route) })
+        ArticlesList(articles = state.articles, onClick = { navigateToDetails(it) })
     }
 
 }
