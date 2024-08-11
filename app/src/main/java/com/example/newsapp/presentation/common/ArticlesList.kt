@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.LoadState
@@ -21,6 +23,9 @@ fun ArticlesList(
     onClick: (Article) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (articles.isEmpty()) {
+        EmptyScreen()
+    }
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(PaddingL),
@@ -34,6 +39,7 @@ fun ArticlesList(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticlesList(
     articles: LazyPagingItems<Article>,
@@ -78,6 +84,13 @@ fun handlePagingResult(
         }
 
         error != null -> {
+            EmptyScreen(
+                error = error
+            )
+            false
+        }
+
+        articles.itemCount == 0 -> {
             EmptyScreen()
             false
         }

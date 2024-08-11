@@ -31,10 +31,14 @@ import com.example.newsapp.presentation.Dimensions.ArticleImageHeight
 import com.example.newsapp.presentation.Dimensions.PaddingL
 import com.example.newsapp.presentation.details.components.DetailsTopBar
 import com.example.newsapp.ui.theme.NewsAppTheme
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun DetailsScreen(
-    article: Article, event: (DetailsEvent) -> Unit, navigateUp: () -> Unit
+    article: Article,
+    isArticleExist: Boolean,
+    event: (DetailsEvent) -> Unit,
+    navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -44,6 +48,7 @@ fun DetailsScreen(
             .statusBarsPadding()
     ) {
         DetailsTopBar(
+            isArticleExist = isArticleExist,
             onBrowsingClick = {
                 Intent(Intent.ACTION_VIEW).also {
                     it.data = Uri.parse(article.url)
@@ -120,7 +125,9 @@ private fun DetailsScreenPreview() {
                 title = "Was Sachsen mit dem Bitcoin-Kursrutsch zu tun hat",
                 url = "https://www.tagesschau.de/wirtschaft/boerse/bitcoin-kursverluste-sachsen-verkaeufe-japan-100.html",
                 urlToImage = "\"https://images.tagesschau.de/image/ca5b3fa9-8f9b-4788-8005-884b9102f5eb/AAABhnP95yA/AAABjwnlFvA/16x9-1280/bitcoin-173.jpg\","
-            ), event = {}) {
+            ), event = {},
+                isArticleExist = true
+                ) {
 
             }
         }
