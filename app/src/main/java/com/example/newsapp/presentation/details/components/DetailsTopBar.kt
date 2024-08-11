@@ -21,10 +21,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.newsapp.R
 import com.example.newsapp.ui.theme.NewsAppTheme
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopBar(
+    isArticleExist: Boolean,
     onBrowsingClick: () -> Unit,
     onShareClick: () -> Unit,
     onBookmarkClick: () -> Unit,
@@ -49,7 +51,7 @@ fun DetailsTopBar(
         actions = {
             IconButton(onClick = onBookmarkClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_bookmark),
+                    painter = if(isArticleExist) painterResource(id = R.drawable.ic_bookmark_fill) else painterResource(id = R.drawable.ic_bookmark),
                     contentDescription = null
                 )
 
@@ -79,7 +81,8 @@ private fun DetailsTopBarPreview() {
                 onBrowsingClick = { },
                 onBackClick = { },
                 onShareClick = { },
-                onBookmarkClick = { }
+                onBookmarkClick = { },
+                isArticleExist = true
             )
         }
     }

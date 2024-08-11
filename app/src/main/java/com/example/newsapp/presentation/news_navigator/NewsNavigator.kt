@@ -1,10 +1,12 @@
 package com.example.newsapp.presentation.news_navigator
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +20,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.newsapp.R
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.presentation.bookmark.BookmarkScreen
@@ -111,9 +112,10 @@ fun NewsNavigator() {
         ) {
             composable(route = Route.HomeScreen.route) {
                 val viewModel: HomeViewModel = hiltViewModel()
-                val articles = viewModel.news.collectAsLazyPagingItems()
+                val state = viewModel.state.value
                 HomeScreen(
-                    articles = articles,
+                    state = state,
+                    event = viewModel::onEvent,
                     navigateToSearch = {
                         navigateToTap(
                             navController = navController,
@@ -142,11 +144,15 @@ fun NewsNavigator() {
                         .show()
                     viewModel.onEvent(DetailsEvent.RemoveSideEffect)
                 }
+
                 navController.previousBackStackEntry?.savedStateHandle?.get<Article?>("article")
                     ?.let { article ->
-                        DetailsScreen(article = article, event = viewModel::onEvent, navigateUp = {
+                        LaunchedEffect(article) {
+                            viewModel.isArticleExist(article)
+                        }
+                        DetailsScreen(article = article, isArticleExist = viewModel.articleExists.value, event = viewModel::onEvent) {
                             navController.navigateUp()
-                        })
+                        }
                     }
             }
             composable(route = Route.BookmarkScreen.route) {

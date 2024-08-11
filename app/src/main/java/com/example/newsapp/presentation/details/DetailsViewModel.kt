@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsapp.domain.model.Article
 import com.example.newsapp.domain.usecases.news.NewsUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,6 +18,9 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(
     private val newsUseCases: NewsUseCases
 ) : ViewModel() {
+
+    private val _articleExists = MutableStateFlow(false)
+    val articleExists: StateFlow<Boolean> = _articleExists
 
     var sideEffect by mutableStateOf<String?>(null)
         private set
@@ -26,8 +32,10 @@ class DetailsViewModel @Inject constructor(
                     val article = newsUseCases.selectArticle(event.article.url)
                     if (article == null) {
                         upsertArticle(event.article)
+                        _articleExists.value = true
                     } else {
                         deleteArticle(event.article)
+                        _articleExists.value = false
                     }
                 }
 
@@ -36,6 +44,13 @@ class DetailsViewModel @Inject constructor(
             is DetailsEvent.RemoveSideEffect -> {
                 sideEffect = null
             }
+        }
+    }
+
+    fun isArticleExist(article: Article) {
+        viewModelScope.launch {
+            val articles = newsUseCases.selectArticles().first()
+            _articleExists.value = articles.any { it.url == article.url }
         }
     }
 
