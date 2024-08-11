@@ -113,7 +113,6 @@ fun NewsNavigator() {
             composable(route = Route.HomeScreen.route) {
                 val viewModel: HomeViewModel = hiltViewModel()
                 val state = viewModel.state.value
-                Log.d("haha", "NewsNavigator: ${state.isRefreshing}")
                 HomeScreen(
                     state = state,
                     event = viewModel::onEvent,
